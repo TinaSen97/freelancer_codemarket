@@ -26,11 +26,11 @@
     </section>
 <div class="container py-4 py-lg-5 my-4">
       <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-md-8 mx-auto">
           <div class="card border-0 box-shadow">
             <div class="card-body">
             @if($allsettings->display_social_login == 1)
-              <h2 class="h4 mb-1">{{ __('Login') }}</h2>
+              <h2 class="h4 mb-1"><strong>{{ __('Login') }}</strong></h2>
               <div class="py-3">
                 <h3 class="d-inline-block align-middle font-size-base font-weight-semibold mb-2 mr-2">{{ __('With social account') }}:</h3>
                 <div class="d-inline-block align-middle">
@@ -54,6 +54,21 @@
                     <label class="password-toggle-btn">
                       <input class="custom-control-input" type="checkbox"><i class="dwg-eye password-toggle-indicator"></i><span class="sr-only">{{ __('Show password') }}</span>
                     </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="font-weight-semibold d-block mb-2">{{ __('Login as') }}:</label>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="user_type" id="customer" value="customer" >
+                    <label class="custom-control-label" for="customer">{{ __('Customer') }}</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="user_type" id="freelancer" value="freelancer">
+                    <label class="custom-control-label" for="freelancer">{{ __('Freelancer') }}</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="user_type" id="vendor" value="vendor">
+                    <label class="custom-control-label" for="vendor">{{ __('Vendor') }}</label>
                   </div>
                 </div>
                 <div class="d-flex flex-wrap justify-content-between">

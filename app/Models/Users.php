@@ -17,6 +17,27 @@ class Users extends Model
     return $value;
 	
   }
+    /**
+     * Get the user types associated with the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function types()
+    {
+        return $this->hasMany(UserType::class);
+    }
+
+    /**
+     * Check if the user has a given type.
+     *
+     * @param  string $type
+     * @return boolean
+     */
+      public function hasType($type)
+      {
+          return $this->types->contains('type', $type);
+      }
+
   
   
 }

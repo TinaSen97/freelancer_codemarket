@@ -720,7 +720,34 @@ class Members extends Model
   }
   /* visitors */
   
+
+  /* Register user with differnt user type*/ 
+  public static function updateUserData($id,$data){
+    DB::table('users')
+      ->where('id', $id)
+      ->update($data);
+  }
+
+  public static function checkUserExists($email)
+  {
+    $get = DB::table('users')->where('email', $email)->first();
+
+    return $get;
+  }
+
+  public static function insertUserTypeData($data){
+    DB::table('user_types')->insert($data);
+  }
+  /*Register user*/ 
   
-  
+  /*Login USer*/
+
+  public static function updateUserTypeData($id,$data){
+    DB::table('users')
+      ->where('id', $id)
+      ->update($data);
+  }
+
+  /*Login user */ 
   
 }

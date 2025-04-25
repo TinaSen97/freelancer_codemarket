@@ -11,6 +11,8 @@ use Socialite;
 use Fickrr\User;
 use Illuminate\Support\Facades\Validator;
 use Helper;
+use Fickrr\Models\Members;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -144,6 +146,7 @@ class LoginController extends Controller
 	 
 	public function login(Request $request)
 	{
+		
 	    $additional_settings = Settings::editAdditional();
 		$field = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 		$email = trim($request->email);
@@ -151,44 +154,64 @@ class LoginController extends Controller
 	
 		if (Auth::attempt(array($field => $email, 'password' =>  $password, 'verified' => 1, 'drop_status' => 'no' )))
 		{
-		    
-		    
-			if(auth()->user()->user_type == 'admin')
+		  
+			if(empty($request->user_type))
 			{
-			  if($this->custom() != 0)
-			  {
-			     return redirect('/admin');
-			  }
-			  else
-			  {
-			     return redirect('/admin/license');
-			  }	 
-			}
-			else
-			{
-				if($additional_settings->subscription_mode == 0)
-				{ 
-				    return redirect('/');
+				if(auth()->user()->user_type == 'admin')
+				{
+					if($this->custom() != 0)
+					{
+						return redirect('/admin');
+					}
+					else
+					{
+						return redirect('/admin/license');
+					}	 
 				}
 				else
 				{
-				  if(auth()->user()->user_type == 'vendor')
-				  {
-					  if(auth()->user()->user_subscr_date >= date('Y-m-d'))
-					  {
-						return redirect('/');
-					  }
-					  else
-					  {
-						return redirect('/subscription');
-					  }	
-				   }
-				   else
-				   {
-					 return redirect('/'); //return redirect('/profile-settings');
-				   }
-				 }  	  
+				return redirect()->back()->with('error', 'These credentials do not match our records.');
+				}
 			}
+			else
+			{
+				
+				$exists = DB::table('user_types')->where('user_id', auth()->user()->id)->where('type', $request->user_type)->first();
+			
+				if($exists)
+				{
+					Members::updateUserTypeData(auth()->user()->id,array('user_type' => $request->user_type));
+					if($additional_settings->subscription_mode == 0)
+					{ 
+						return redirect('/');
+					}
+					else
+					{
+					
+						if( $request->user_type == 'vendor')
+						{
+							if(auth()->user()->user_subscr_date >= date('Y-m-d'))
+							{
+								return redirect('/');
+							}
+							else
+							{
+								return redirect('/subscription');
+							}	
+						}
+						else
+						{
+							return redirect('/'); //return redirect('/profile-settings');
+						}
+					}  	
+				}
+				else
+				{
+					Auth::logout();
+					return redirect()->back()->with('error', 'These selected usert typecredentials do not match our records.');
+				}  
+			}
+			
 	
 		}
 	    else
