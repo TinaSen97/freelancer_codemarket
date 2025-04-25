@@ -170,7 +170,8 @@ class LoginController extends Controller
 				}
 				else
 				{
-				return redirect()->back()->with('error', 'These credentials do not match our records.');
+					Auth::logout();
+					return redirect()->back()->with('error', 'These credentials do not match our records.');
 				}
 			}
 			else
